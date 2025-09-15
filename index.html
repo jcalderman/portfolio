@@ -1,12 +1,160 @@
 <!DOCTYPE html>
-<html lang="eng">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Jordan Alderman - UX/UI Portfolio</title>
-    </head>
-    <body>
-        <h1>Welcome to My Porfolio</h1>
-        <p>This is the starting point. Soon, I'll add case studies, projects, interactive demos and more here.</p>
-    </body>
+<html lang="en">
+<head>
+  <!-- META / HEAD: document config, fonts, SEO basics -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jordan Alderman – UX/UI Portfolio</title>
+
+  <!-- STYLES: global + layout + helpers
+       Why here? Keeping CSS in <head> is simplest while you’re starting out.
+       Later you can extract to style.css without changing the HTML structure. -->
+  <style>
+    /* ─── Global Reset / Base ─────────────────────────────────────────────── */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: #111;
+      background: #fff;
+      /* Center text site-wide */
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ─── Layout Helpers ─────────────────────────────────────────────────── */
+    .container { 
+        max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; 
+    }
+    .section    { 
+        padding: 3rem 0; 
+    }
+    .muted      { 
+        color: #666; 
+    }
+    /* ─── Header Video Banner ──────────────────────────────────────────────
+       - We give the header a fixed height on large screens (50vh),
+         but allow it to shrink on small screens.
+       - The video uses object-fit: cover so it behaves like a background image. */
+       header.hero {
+        position: relative;
+        height: 50vh;
+        min-height: 280px;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+       }
+       .hero video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+       }
+       .hero overlay {
+        position: relative;
+        z-index: 1;
+        padding: 1rem 1.25rem;
+        backdrop-filter: blur(0px);
+        color: #fff;
+        text-shadow: 0 1px 18px rgba(0, 0, 0, .35);
+       }
+       .hero h1 { margin: 0 0 .25rem 0; font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+    .hero p  { margin: 0; font-size: clamp(.95rem, 2vw, 1.1rem); }
+
+    /* ─── Content Cards (for “Work” later) ───────────────────────────────── */
+    .grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: stretch;
+    }
+    .card {
+      border-radius: 16px;
+      background: #f7f7f7;
+      padding: 1.25rem;
+      text-align: left;     /* cards usually read nicer left-aligned */
+      margin: 0 auto;       /* still centered in their grid cell */
+    }
+    .card h3 { margin: 0 0 .5rem 0; }
+    .card p  { margin: 0; color: #555; }
+    .cta {
+      display: inline-block;
+      margin-top: .75rem;
+      padding: .65rem .9rem;
+      border-radius: 10px;
+      text-decoration: none;
+      background: #000;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ▸ SECTION: Header Video
+       Why here? <header> is for site-intro/branding/hero. The <video> sits behind
+       an optional text overlay. Muted+autoplay+loop+playsinline = consistent mobile autoplay. -->
+  <header class="hero">
+    <video autoplay muted loop playsinline
+           src="/assets/header.mp4"
+           poster="/assets/header-poster.jpg">
+      <!-- Fallback message for very old browsers -->
+      Your browser does not support the video tag.
+    </video>
+
+    <!-- Optional overlay title on top of the video -->
+    <div class="overlay">
+      <h1>Jordan Alderman – UX/UI Portfolio</h1>
+      <p class="muted">Case studies · Prototypes · Interactive demos</p>
+    </div>
+  </header>
+
+  <!-- ▸ SECTION: Intro
+       Why here? <main> holds your primary content. Each .section is spaced for readability. -->
+  <main>
+    <section class="section">
+      <div class="container">
+        <h2>Welcome</h2>
+        <p class="muted">
+          This site is evolving. I’ll be adding UX case studies, UI systems, and interactive prototypes.
+        </p>
+      </div>
+    </section>
+
+    <!-- ▸ SECTION: Work (example cards to expand later) -->
+    <section id="work" class="section">
+      <div class="container">
+        <h2>Featured Work</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Case Study Template</h3>
+            <p>Problem → Research → IA → Wireframes → Hi-fi → Prototype → Results.</p>
+            <a class="cta" href="#" aria-disabled="true">Coming Soon</a>
+          </article>
+
+          <article class="card">
+            <h3>Interactive Demo Slot</h3>
+            <p>This slot can host a future React/Vue widget. For now, plain JS:</p>
+            <div id="mount"></div>
+            <script>
+              document.getElementById('mount').textContent = 'Hello from vanilla JS 👋';
+            </script>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ▸ SECTION: Contact (simple placeholder) -->
+    <section id="contact" class="section">
+      <div class="container">
+        <h2>Contact</h2>
+        <p class="muted">Email • LinkedIn • GitHub</p>
+      </div>
+    </section>
+  </main>
+
+</body>
 </html>

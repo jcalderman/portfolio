@@ -23,6 +23,44 @@
       line-height: 1.5;
     }
 
+    :root{
+  --radius-hero: 24px;
+  --shadow-hero: 0 18px 40px rgba(0,0,0,.22), 0 2px 8px rgba(0,0,0,.08);
+}
+
+/* Hero: rounded corners + drop shadow + subtle readability vignette */
+header.hero{
+  border-radius: var(--radius-hero);
+  box-shadow: var(--shadow-hero);
+  overflow: hidden;         /* clips the video to the rounded corners */
+  isolation: isolate;       /* keeps overlay effects contained */
+  background: #000;         /* avoids white corners flashing while video loads */
+  /* Optional: uncomment the next 2 lines if you want a card-style hero
+  max-width: 1100px;
+  margin: 1.5rem auto 0;
+  */
+}
+
+/* Keep your existing rules, plus these small niceties */
+.hero video{
+  object-fit: contain;      /* you had this—keeps full video visible */
+  /* If you prefer full-bleed crop instead, swap to: object-fit: cover; */
+  filter: saturate(1.05) contrast(1.04);
+}
+
+/* Soft gradient at the bottom to help white text pop (optional) */
+header.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background: linear-gradient(to bottom,
+              rgba(0,0,0,0) 55%,
+              rgba(0,0,0,.18) 85%,
+              rgba(0,0,0,.28) 100%);
+  z-index: 1;               /* sits beneath your .overlay text */
+}
+
     /* ─── Layout Helpers ─────────────────────────────────────────────────── */
     .container {
         max-width: 1100px; 

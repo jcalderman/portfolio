@@ -41,13 +41,17 @@
        - The video uses object-fit: cover so it behaves like a background image. */
        header.hero {
         position: relative;
-        height: 50vh;
-        min-height: 280px;
+        height: 70vh;
+        min-height: 400px;
         overflow: hidden;
         display: grid;
         place-items: center;
        }
        .hero video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
         object-fit: contain;
         z-index: 0;
        }
@@ -161,6 +165,7 @@
 
 </body>
 </html>
+
 
 
 

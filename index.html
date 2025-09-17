@@ -36,10 +36,11 @@ header.hero{
   position: relative;
   /* keep the container near the video’s natural ratio so height isn’t cropped */
   aspect-ratio: 16 / 9;
-  height: auto;
   min-height: 320px;
   max-height: 70vh;
-
+  width: min(1200px, calc(100% - 2*var(--hero-gutter))); /* explicit width */
+  margin: 0 auto;                                       /* ⬅ centers it */
+  
   margin-inline: var(--hero-gutter);
   border-radius: var(--hero-radius);
   box-shadow: var(--hero-shadow);

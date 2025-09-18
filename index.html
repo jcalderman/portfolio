@@ -1,331 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- META / HEAD: document config, fonts, SEO basics -->
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jordan Alderman – UX/UI Portfolio</title>
-
-  <!-- STYLES: global + layout + helpers
-       Why here? Keeping CSS in <head> is simplest while you’re starting out.
-       Later you can extract to style.css without changing the HTML structure. -->
-  <style>
-   /* ─── Theme variables (light default) ─────────────────────────────────── */
-   :root{
-     /* color tokens (light defaults) */
-     --color-bg: #ffffff;
-     --color-text: #111111;
-     --color-muted: #666666;
-     --card-bg: #f7f7f7;
-     --accent: #000000;
-
-     /* hero tokens (existing values kept) */
-     --hero-radius: 22px;
-     --hero-shadow: 0 18px 40px rgba(0,0,0,.675), 0 2px 8px rgba(0,0,0,.429);
-     --hero-gutter: clamp(12px, 3vw, 28px);
-     --hero-focus-y: 38%;
-
-     /* video blur — you requested 2px for both light and dark */
-     --video-blur: 2px;
-   }
-
-   /* Dark theme overrides */
-   :root[data-theme="dark"]{
-     --color-bg: #0b0b0c;
-     --color-text: #eaeaea;
-     --color-muted: #bdbdbd;
-     --card-bg: #111214;
-     --accent: #f7f7f7;
-
-     /* keep hero tokens similar; you can tweak if desired */
-     --hero-shadow: 0 24px 60px rgba(0,0,0,.75);
-
-     /* still 2px as requested */
-     --video-blur: 2px;
-   }
-
-   /* Respect OS preference for initial default (applies only if user hasn't explicitly set theme) */
-   @media (prefers-color-scheme: dark) {
-     :root:not([data-theme]){
-       --color-bg: #0b0b0c;
-       --color-text: #eaeaea;
-       --color-muted: #bdbdbd;
-       --card-bg: #111214;
-       --accent: #f7f7f7;
-       --video-blur: 2px;
-     }
-   }
-
-   /* Smooth-ish transitions for theme changes (optional) */
-   * {
-     transition: background-color 230ms ease, color 230ms ease, box-shadow 230ms ease, border-color 230ms ease;
-   }
-
-   /* ─── Global Reset / Base ─────────────────────────────────────────────── */
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-body {
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  /* apply theme variables (these will override existing hard-coded values below because these rules appear later) */
-  color: var(--color-text);
-  background: var(--color-bg);
-  text-align: center;
-  line-height: 1.5;
-}
-
-/* Hero tokens (existing block remains, variables above feed these) */
+<!-- ─── CSS: variables + optional transitions ───────────────────────────── -->
+<style>
 :root{
+  /* color tokens (light defaults) */
+  --color-bg: #ffffff;
+  --color-text: #111111;
+  --color-muted: #666666;
+  --card-bg: #f7f7f7;
+  --accent: #000000;
+
+  /* hero tokens (existing values kept) */
   --hero-radius: 22px;
   --hero-shadow: 0 18px 40px rgba(0,0,0,.675), 0 2px 8px rgba(0,0,0,.429);
   --hero-gutter: clamp(12px, 3vw, 28px);
   --hero-focus-y: 38%;
+
+  /* video blur — 2px for both light and dark */
+  --video-blur: 2px;
 }
 
-/* Hero container (aspect-ratio model) */
-header.hero{
-  position: relative;
-  aspect-ratio: 16 / 10;                         /* choose this OR a fixed height, not both */
-  min-height: 320px;
-  width: min(2200px, calc(100% - 2*var(--hero-gutter)));
-  margin: 0 auto;
-  border-radius: var(--hero-radius);
-  box-shadow: var(--hero-shadow);
-  overflow: hidden;
-  isolation: isolate;
-  background: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;                                     /* video touches edges */
-  text-align: center;
+:root[data-theme="dark"]{
+  --color-bg: #0b0b0c;
+  --color-text: #eaeaea;
+  --color-muted: #bdbdbd;
+  --card-bg: #111214;
+  --accent: #f7f7f7;
+  --hero-shadow: 0 24px 60px rgba(0,0,0,.75);
+  --video-blur: 2px;
 }
 
-/* Video fills hero without side bars (video blur now follows --video-blur) */
-header.hero > video{
-  /* filter was previously hard-coded to 2px; now uses the variable (still 2px for both themes) */
-  filter: blur(var(--video-blur));
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;                               /* avoid bars; minimal cropping */
-  object-position: 50% var(--hero-focus-y);
-  z-index: 0;
-}
+/* smooth transitions (optional) */
+* { transition: background-color 230ms ease, color 230ms ease, box-shadow 230ms ease, border-color 230ms ease; }
+</style>
 
-/* Overlay content */
-.hero .overlay{
-  position: relative;
-  z-index: 1;
-  padding: 0 2rem;
-  color: #fff;
-  text-shadow: 0 1px 18px rgba(0,0,0,.35);
-}
+<!-- ─── B: Toggle button HTML (inside .overlay) ────────────────────────── -->
+<div class="overlay">
+  <h1>Jordan Alderman – UX/UI Portfolio</h1>
+  <p class="muted">Case studies · Prototypes · Interactive demos</p>
 
-.hero h1 { margin: 0 0 .25rem 0; font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
-.hero p  { margin: 0; font-size: clamp(.95rem, 2vw, 1.1rem); }
+  <button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode" type="button">
+    <span id="theme-icon" aria-hidden="true">🌙</span>
+    <span class="visually-hidden">Toggle theme</span>
+  </button>
+</div>
 
-/* ensure muted color follows the variable */
-.muted { color: var(--color-muted); }
+<!-- ─── C: JS for theme detect/toggle/persist ───────────────────────────── -->
+<script>
+(function () {
+  const KEY = 'site-theme';
+  const root = document.documentElement;
+  const btn = document.getElementById('theme-toggle');
+  const icon = document.getElementById('theme-icon');
 
-/* ─── Layout Helpers ─────────────────────────────────────────────────── */
-.container { max-width: 1100px; margin: 0 auto; padding: 0 1.25rem; }
-.section  { padding: 3rem 0; }
+  function getStoredTheme() { return localStorage.getItem(KEY); }
+  function getSystemPrefersDark() { return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; }
 
-/* ─── Cards ──────────────────────────────────────────────────────────── */
-.grid{
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  align-items: stretch;
-}
-.card{
-  border-radius: 16px;
-  /* ensure card background follows the variable */
-  background: var(--card-bg);
-  padding: 1.25rem;
-  text-align: left;
-  margin: 0 auto;
-}
-.card h3 { margin: 0 0 .5rem 0; }
-.card p  { margin: 0; color: #555; }
-.cta{
-  display: inline-block;
-  margin-top: .75rem;
-  padding: .65rem .9rem;
-  border-radius: 10px;
-  text-decoration: none;
-  background: var(--accent);
-  color: var(--color-bg); /* button text contrasts with accent */
-}
-
-/* ---------- Theme toggle control styles ---------- */
-#theme-toggle {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,0.12);
-  color: var(--color-text);
-  padding: .35rem .6rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-left: .5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-}
-
-/* visually-hidden utility for screen readers */
-.visually-hidden { 
-  position: absolute !important; 
-  height: 1px; width: 1px; 
-  overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap;
-}
-  </style>
-</head>
-
-<body>
-
-  <!-- ▸ SECTION: Header Video
-       Why here? <header> is for site-intro/branding/hero. The <video> sits behind
-       an optional text overlay. Muted+autoplay+loop+playsinline = consistent mobile autoplay. -->
-  <header class="hero">
-    <video 
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      src="assets/inside-lion.mp4"
-      poster="assets/header-poster.jpg">
-      <!-- Fallback message for very old browsers -->
-      Your browser does not support the video tag.
-    </video>
-
-    <!-- Optional overlay title on top of the video -->
-    <div class="overlay">
-      <h1>Jordan Alderman – UX/UI Portfolio</h1>
-      <p class="muted">Case studies · Prototypes · Interactive demos</p>
-
-      <!-- Theme toggle (added) -->
-      <button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode" type="button">
-        <span id="theme-icon" aria-hidden="true">🌙</span>
-        <span class="visually-hidden">Toggle theme</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- ▸ SECTION: Intro
-       Why here? <main> holds your primary content. Each .section is spaced for readability. -->
-  <main>
-    <section class="section">
-      <div class="container">
-        <h2>Welcome</h2>
-        <p class="muted">
-          This site is evolving. I’ll be adding UX case studies, UI systems, and interactive prototypes.
-        </p>
-      </div>
-    </section>
-
-    <!-- ▸ SECTION: Work (example cards to expand later) -->
-    <section id="work" class="section">
-      <div class="container">
-        <h2>Featured Work</h2>
-        <div class="grid">
-          <article class="card">
-            <h3>Case Study Template</h3>
-            <p>Problem → Research → IA → Wireframes → Hi-fi → Prototype → Results.</p>
-            <a class="cta" href="#" aria-disabled="true">Coming Soon</a>
-          </article>
-
-          <article class="card">
-            <h3>Interactive Demo Slot</h3>
-            <p>This slot can host a future React/Vue widget. For now, plain JS:</p>
-            <div id="mount"></div>
-            <script>
-              document.getElementById('mount').textContent = 'Hello from vanilla JS 👋';
-            </script>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ▸ SECTION: Contact (simple placeholder) -->
-    <section id="contact" class="section">
-      <div class="container">
-        <h2>Contact</h2>
-        <p class="muted">Email • LinkedIn • GitHub</p>
-      </div>
-    </section>
-  </main>
-
-  <!-- ─── Theme toggle JS (detect, toggle, persist) ──────────────────────── -->
-  <script>
-  (function () {
-    const KEY = 'site-theme'; // localStorage key
-    const root = document.documentElement; // :root
-    const btn = document.getElementById('theme-toggle');
-    const icon = document.getElementById('theme-icon');
-
-    // get stored theme or system preference
-    function getStoredTheme() {
-      return localStorage.getItem(KEY); // 'light' | 'dark' | null
+  function applyTheme(theme) {
+    if(theme === 'dark'){
+      root.setAttribute('data-theme','dark');
+      btn && btn.setAttribute('aria-pressed','true');
+      if(icon) icon.textContent = '☀️';
+    } else {
+      root.setAttribute('data-theme','light');
+      btn && btn.setAttribute('aria-pressed','false');
+      if(icon) icon.textContent = '🌙';
     }
-    function getSystemPrefersDark() {
-      return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
+  }
 
-    function applyTheme(theme) {
-      if (theme === 'dark') {
-        root.setAttribute('data-theme', 'dark');
-        btn && btn.setAttribute('aria-pressed', 'true');
-        if (icon) icon.textContent = '☀️';
-      } else if (theme === 'light') {
-        root.setAttribute('data-theme', 'light');
-        btn && btn.setAttribute('aria-pressed', 'false');
-        if (icon) icon.textContent = '🌙';
-      } else {
-        root.removeAttribute('data-theme'); // fallback to CSS media queries
-        btn && btn.setAttribute('aria-pressed', 'false');
-        if (icon) icon.textContent = '🌙';
-      }
-    }
-
-    // initialize
-    (function init() {
-      const stored = getStoredTheme();
-      if (stored === 'light' || stored === 'dark') {
-        applyTheme(stored);
-      } else {
-        // no stored preference: use system preference
-        applyTheme(getSystemPrefersDark() ? 'dark' : 'light');
-      }
-    })();
-
-    // toggle handler
-    function toggleTheme() {
-      const current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      applyTheme(next);
-      localStorage.setItem(KEY, next);
-    }
-
-    // connect button
-    if (btn) {
-      btn.addEventListener('click', toggleTheme);
-      // keyboard accessible by default (button)
-    }
-
-    // Listen to system theme changes and respect only if user hasn't explicitly chosen
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!getStoredTheme()) { // only update if user hasn't explicitly selected a theme
-          applyTheme(e.matches ? 'dark' : 'light');
-        }
-      });
+  // initialize
+  (function init() {
+    const stored = getStoredTheme();
+    if(stored === 'light' || stored === 'dark'){
+      applyTheme(stored);
+    } else {
+      applyTheme(getSystemPrefersDark() ? 'dark':'light');
     }
   })();
-  </script>
 
-</body>
-</html>
+  function toggleTheme(){
+    const current = root.getAttribute('data-theme') === 'dark' ? 'dark':'light';
+    const next = current==='dark' ? 'light':'dark';
+    applyTheme(next);
+    localStorage.setItem(KEY,next);
+  }
+
+  if(btn) btn.addEventListener('click', toggleTheme);
+
+  // react to system changes if no stored preference
+  if(window.matchMedia){
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+      if(!getStoredTheme()) applyTheme(e.matches ? 'dark':'light');
+    });
+  }
+})();
+</script>

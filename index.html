@@ -46,15 +46,12 @@ header.hero{
   align-items: center;
   justify-content: center;
   padding: 0;                                     /* video touches edges */
-  text-align: center;
 }
 
 /* Video fills hero without side bars */
 header.hero > video{
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
   object-fit: cover;                               /* avoid bars; minimal cropping */
   object-position: 50% var(--hero-focus-y);
   z-index: 0;
@@ -66,6 +63,7 @@ header.hero > video{
   z-index: 1;
   padding: 0 2rem;
   color: #fff;
+  backdrop-filter: blur(8px);
   text-shadow: 0 1px 18px rgba(0,0,0,.35);
 }
 
@@ -89,7 +87,6 @@ header.hero > video{
   background: #f7f7f7;
   padding: 1.25rem;
   text-align: left;
-  margin: 0 auto;
 }
 .card h3 { margin: 0 0 .5rem 0; }
 .card p  { margin: 0; color: #555; }
@@ -176,6 +173,7 @@ header.hero > video{
 
 </body>
 </html>
+
 
 
 

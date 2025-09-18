@@ -11,73 +11,7 @@
        Why here? Keeping CSS in <head> is simplest while you’re starting out.
        Later you can extract to style.css without changing the HTML structure. -->
   <style>
-   /* -------- Theme variables (light default) -------- */
-:root{
-  --color-bg: #ffffff;
-  --color-text: #111111;
-  --color-muted: #666666;
-  --card-bg: #f7f7f7;
-  --accent: #000000;
-  --hero-shadow: 0 18px 40px rgba(0,0,0,.675), 0 2px 8px rgba(0,0,0,.429);
-  --hero-focus-y: 38%;
-  --hero-radius: 22px;
-  --hero-gutter: clamp(12px, 3vw, 28px);
-  --video-blur: 2px; /* if you want subtle blur in dark mode, override below */
-}
-
-/* Dark theme overrides */
-:root[data-theme="dark"]{
-  --color-bg: #0b0b0c;
-  --color-text: #eaeaea;
-  --color-muted: #bdbdbd;
-  --card-bg: #111214;
-  --accent: #f7f7f7;
-  --hero-shadow: 0 24px 60px rgba(0,0,0,.75);
-  --video-blur: 2px;
-}
-
-/* Respect OS preference for initial default (applies only if no explicit theme set) */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme]){
-    --color-bg: #0b0b0c;
-    --color-text: #eaeaea;
-    --color-muted: #bdbdbd;
-    --card-bg: #111214;
-    --accent: #f7f7f7;
-    --video-blur: 2px;
-  }
-}
-
-/* Smooth transitions for color changes (optional) */
-* {
-  transition: background-color 230ms ease, color 230ms ease, box-shadow 230ms ease;
-}
-
-/* Apply the variables to your base selectors */
-body {
-  margin: 0;
-  font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-  color: var(--color-text);
-  background: var(--color-bg);
-  text-align: center;
-  line-height: 1.5;
-}
-
-/* card backgrounds, ctas */
-.card { background: var(--card-bg); color: var(--color-text); }
-.muted { color: var(--color-muted); }
-.cta { background: var(--accent); color: calc(1 - var(--accent)); } /* keep your existing styles if you prefer */
-
-/* hero shadow variable usage */
-header.hero { box-shadow: var(--hero-shadow); }
-
-/* make the video blur follow the var */
-header.hero > video {
-  filter: blur(var(--video-blur));
-  /* existing object-fit/object-position stay */
-}
-
-    /* ─── Global Reset / Base ─────────────────────────────────────────────── */
+   /* ─── Global Reset / Base ─────────────────────────────────────────────── */
 * { box-sizing: border-box; }
 html, body { height: 100%; }
 body {
@@ -118,7 +52,6 @@ header.hero{
 
 /* Video fills hero without side bars */
 header.hero > video{
-  filter: blur(4px);
   position: absolute;
   inset: 0;
   width: 100%;
@@ -130,31 +63,6 @@ header.hero > video{
 
 /* Overlay content */
 .hero .overlay{
- <!-- Ligth/Dark Toggle -->
-<button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode" type="button">
-  <span id="theme-icon" aria-hidden="true">🌙</span>
-  <span class="visually-hidden">Toggle theme</span>
-</button>
-    
-/* visual styles — simple and unobtrusive */
-#theme-toggle{
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.12);
-  color: var(--color-text);
-  padding: .4rem .6rem;
-  border-radius: 8px;
-  font-size: 1rem;
-  cursor: pointer;
-  margin-left: .5rem;
-}
-
-/* accessible hidden text for screen readers */
-.visually-hidden { 
-  position: absolute !important; 
-  height: 1px; width: 1px; 
-  overflow: hidden; clip: rect(1px, 1px, 1px, 1px); white-space: nowrap;
-}
-
   position: relative;
   z-index: 1;
   padding: 0 2rem;
@@ -267,76 +175,8 @@ header.hero > video{
     </section>
   </main>
 
-  <script>
-(function () {
-  const KEY = 'site-theme'; // localStorage key
-  const root = document.documentElement; // :root
-  const btn = document.getElementById('theme-toggle');
-  const icon = document.getElementById('theme-icon');
-
-  // get stored theme or system preference
-  function getStoredTheme() {
-    return localStorage.getItem(KEY); // 'light' | 'dark' | null
-  }
-  function getSystemPrefersDark() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-  }
-
-  function applyTheme(theme) {
-    if (theme === 'dark') {
-      root.setAttribute('data-theme', 'dark');
-      btn && btn.setAttribute('aria-pressed', 'true');
-      if (icon) icon.textContent = '☀️';
-    } else if (theme === 'light') {
-      root.setAttribute('data-theme', 'light');
-      btn && btn.setAttribute('aria-pressed', 'false');
-      if (icon) icon.textContent = '🌙';
-    } else {
-      root.removeAttribute('data-theme'); // fallback to CSS media queries
-      btn && btn.setAttribute('aria-pressed', 'false');
-      if (icon) icon.textContent = '🌙';
-    }
-  }
-
-  // initialize
-  (function init() {
-    const stored = getStoredTheme();
-    if (stored === 'light' || stored === 'dark') {
-      applyTheme(stored);
-    } else {
-      // no stored preference: use system preference
-      applyTheme(getSystemPrefersDark() ? 'dark' : 'light');
-    }
-  })();
-
-  // toggle handler
-  function toggleTheme() {
-    const current = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
-    const next = current === 'dark' ? 'light' : 'dark';
-    applyTheme(next);
-    localStorage.setItem(KEY, next);
-  }
-
-  // connect button
-  if (btn) {
-    btn.addEventListener('click', toggleTheme);
-    // keyboard accessible by default (button)
-  }
-
-  // Optional: listen to system theme changes if you want to override only when user hasn't chosen
-  window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!getStoredTheme()) { // only update if user hasn't explicitly selected a theme
-      applyTheme(e.matches ? 'dark' : 'light');
-    }
-  });
-})();
-</script>
-
 </body>
 </html>
-
-
-
 
 
 

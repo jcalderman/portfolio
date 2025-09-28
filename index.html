@@ -91,17 +91,29 @@
      text-align: center;
    }
 
-   /* Video fills hero without side bars (blur uses variable) */
-   header.hero > video{
-     filter: blur(var(--video-blur));
-     position: absolute;
-     inset: 0;
-     width: 100%;
-     height: 100%;
-     object-fit: cover;                               /* avoid bars; minimal cropping */
-     object-position: 50% var(--hero-focus-y);
-     z-index: 0;
-   }
+  /* Both videos inherit the same fill/blur styling */
+header.hero > video {
+  filter: blur(var(--video-blur));
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% var(--hero-focus-y);
+  z-index: 0;
+  display: none; /* hide by default */
+}
+
+/* Show light video in light mode */
+:root[data-theme="light"] .video-light,
+:root:not([data-theme]) .video-light {
+  display: block;
+}
+
+/* Show dark video in dark mode */
+:root[data-theme="dark"] .video-dark {
+  display: block;
+}
 
    /* Overlay content */
    .hero .overlay{
@@ -174,31 +186,43 @@
 
 <body>
 
-  <!-- ▸ SECTION: Header Video -->
-  <header class="hero">
-    <video 
-      autoplay
-      muted
-      loop
-      playsinline
-      preload="metadata"
-      src="assets/inside-lion.mp4"
-      poster="assets/header-poster.jpg">
-      Your browser does not support the video tag.
-    </video>
+ <header class="hero">
+  <!-- Light mode video -->
+  <video 
+    class="video-light"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    src="assets/inside-lion.mp4"
+    poster="assets/header-poster.jpg">
+    Your browser does not support the video tag.
+  </video>
 
-    <!-- Existing overlay + added theme toggle button -->
-    <div class="overlay">
-      <h1>Jordan Alderman – UX/UI Portfolio</h1>
-      <p class="muted">Case studies · Prototypes · Interactive demos</p>
+  <!-- Dark mode video -->
+  <video 
+    class="video-dark"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    src="assets/inside-lion-dark.mp4"
+    poster="assets/header-poster-dark.jpg">
+    Your browser does not support the video tag.
+  </video>
 
-      <!-- Theme toggle (added) -->
-      <button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode" type="button">
-        <span id="theme-icon" aria-hidden="true">🌙</span>
-        <span class="visually-hidden">Toggle theme</span>
-      </button>
-    </div>
-  </header>
+  <div class="overlay">
+    <h1>Jordan Alderman – UX/UI Portfolio</h1>
+    <p class="muted">Case studies · Prototypes · Interactive demos</p>
+    <button id="theme-toggle" aria-pressed="false" aria-label="Toggle light and dark mode" type="button">
+      <span id="theme-icon" aria-hidden="true">🌙</span>
+      <span class="visually-hidden">Toggle theme</span>
+    </button>
+  </div>
+</header>
+
 
   <!-- ▸ SECTION: Intro -->
   <main>
@@ -307,3 +331,4 @@
 
 </body>
 </html>
+
